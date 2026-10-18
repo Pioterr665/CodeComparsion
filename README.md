@@ -72,24 +72,4 @@ src/core.ts          Directory scanning and comparison, independent of VS Code
 src/extension.ts     Commands, workspace.fs adapter, and view integration
 src/folderView.ts    Folder tree model and comparison interface
 test/                Comparison engine, tree model, and command tests
-Containerfile        Build environment
-dev                  Wrapper for running tools through Podman
 ```
-
-## Current limitations
-
-- Results are a snapshot. Use **Refresh comparison** after changing files; there is no automatic refresh yet.
-- There are no exclusion filters yet. Folders such as `node_modules` and `.git` are included in the scan.
-- File copying, synchronization, and three-way merge are not implemented.
-- The extension itself does not write to or delete the compared files. You can still edit files manually in VS Code's native diff editor.
-- `workspace.fs` does not provide an atomic read that refuses to follow symbolic links. A file replaced between the metadata check and the read may still be read. A file growing during that interval can also exceed the configured size limit.
-
-Tests cover the comparison engine, tree model, and commands using a VS Code API test double. They do not replace testing the interface in a running VS Code instance.
-
-## Next steps
-
-Exclusion filters, easier navigation between differences, and refreshing only changed parts of the tree. Copying between sides and three-way merge will need a separate implementation.
-
-## Upgrading from MeldCode
-
-The extension ID is now `codecomparsion-local.codecomparsion`. Uninstall the old `meldcode-local.meldcode` extension to avoid duplicate menu entries, then install the new VSIX. If you customized `meldcode.*` settings or command keybindings, rename their prefix to `codecomparsion.*`.
