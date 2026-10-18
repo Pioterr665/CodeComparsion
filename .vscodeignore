@@ -1,0 +1,16 @@
+src/**
+test*/**
+node_modules/**
+work/**
+.vscode/**
+Containerfile
+dev
+esbuild.mjs
+tsconfig*.json
+package-lock.json
+.containerignore
+.gitignore
+dist/*.test.cjs
+dist/*.map
+audit.json
+README.*.md

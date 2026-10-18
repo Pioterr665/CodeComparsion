@@ -1,0 +1,108 @@
+{
+  "name": "codecomparsion",
+  "displayName": "CodeComparsion",
+  "description": "Read-only file and recursive folder comparison in VS Code.",
+  "version": "0.2.1",
+  "publisher": "codecomparsion-local",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "check": "tsc --noEmit",
+    "test": "esbuild test/core.test.ts --bundle --platform=node --format=cjs --outfile=dist/core.test.cjs && esbuild test/extension.test.ts --bundle --platform=node --format=cjs --alias:vscode=./test/vscode-mock.ts --outfile=dist/extension.test.cjs && esbuild test/folderView.test.ts --bundle --platform=node --format=cjs --outfile=dist/folderView.test.cjs && node --test dist/*.test.cjs",
+    "package": "npm run check && npm run build && vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/vscode": "1.95.0",
+    "@vscode/vsce": "4.0.0",
+    "esbuild": "0.25.10",
+    "typescript": "5.9.3"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "codecomparsion.select",
+        "title": "Select for Compare",
+        "category": "CodeComparsion"
+      },
+      {
+        "command": "codecomparsion.compare",
+        "title": "Compare with Selected",
+        "category": "CodeComparsion"
+      },
+      {
+        "command": "codecomparsion.refresh",
+        "title": "Refresh Comparison",
+        "category": "CodeComparsion"
+      },
+      {
+        "command": "codecomparsion.open",
+        "title": "Open File Comparison",
+        "category": "CodeComparsion"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "codecomparsion.select",
+          "group": "codecomparsion@1"
+        },
+        {
+          "command": "codecomparsion.compare",
+          "when": "codecomparsion.hasSelection",
+          "group": "codecomparsion@2"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "codecomparsion.select",
+          "group": "codecomparsion@1"
+        },
+        {
+          "command": "codecomparsion.compare",
+          "when": "codecomparsion.hasSelection",
+          "group": "codecomparsion@2"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "codecomparsion.refresh",
+          "when": "view == codecomparsion.results",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "codecomparsion.results",
+          "name": "Compare Results"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CodeComparsion",
+      "properties": {
+        "codecomparsion.maxFileBytes": {
+          "type": "number",
+          "default": 16777216,
+          "minimum": 1024,
+          "description": "Maximum bytes read per file. Larger files are marked as skipped."
+        },
+        "codecomparsion.maxEntries": {
+          "type": "number",
+          "default": 50000,
+          "minimum": 100,
+          "description": "Maximum paths scanned in each folder."
+        }
+      }
+    }
+  },
+  "license": "GPL-3.0-or-later"
+}
